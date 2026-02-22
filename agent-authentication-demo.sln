@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthenticationDebugFunction", "AuthDebugFunction\AuthenticationDebugFunction.csproj", "{92482B7C-1926-535E-475B-D3EDB61F0F9C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbeckDev.AuthAgentSample.DebugFunction", "AbeckDev.AuthAgentSample.DebugFunction\AbeckDev.AuthAgentSample.DebugFunction.csproj", "{92482B7C-1926-535E-475B-D3EDB61F0F9C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbeckDev.AuthAgentSample.Agent", "AbeckDev.AuthAgentSample.Agent\AbeckDev.AuthAgentSample.Agent.csproj", "{0FA98BFE-5B3A-4FEB-B6BB-5D259C74D7D2}"
 EndProject

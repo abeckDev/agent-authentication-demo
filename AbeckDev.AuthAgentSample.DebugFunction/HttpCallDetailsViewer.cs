@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace AbeckDev.AgentAuthentication.DebugFunction;
+namespace AbeckDev.AuthAgentSample.DebugFunction;
 
 public class HttpCallDetailsViewer
 {

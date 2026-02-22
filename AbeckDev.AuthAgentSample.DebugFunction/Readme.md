@@ -1,4 +1,4 @@
-## AuthDebugFunction
+## AbeckDev.AuthAgentSample.DebugFunction
 
 An Azure Function that provides detailed information about an incoming HTTP request to demonstrate and debug credential delegation mechanisms used by AI agents.
 
@@ -41,22 +41,16 @@ An HTML page containing:
 
 ### Running Locally
 
-From the `AuthDebugFunction` directory:
+From the `AbeckDev.AuthAgentSample.DebugFunction` directory:
 
 ```bash
-func start --port 7178
-```
-
-Or using the .NET CLI:
-
-```bash
-dotnet run
+func start
 ```
 
 The function will be available at:
 
 ```
-http://localhost:7178/api/HttpCallDetailsViewer
+http://localhost:7071/api/HttpCallDetailsViewer
 ```
 
 ### Example Requests
@@ -64,20 +58,20 @@ http://localhost:7178/api/HttpCallDetailsViewer
 **Basic request (no token):**
 
 ```bash
-curl -X POST http://localhost:7178/api/HttpCallDetailsViewer
+curl -X POST http://localhost:7071/api/HttpCallDetailsViewer
 ```
 
 **Request with a bearer token:**
 
 ```bash
-curl -X POST http://localhost:7178/api/HttpCallDetailsViewer \
+curl -X POST http://localhost:7071/api/HttpCallDetailsViewer \
      -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
 ```
 
 **Save the response as an HTML file and open it:**
 
 ```bash
-curl -s -X POST http://localhost:7178/api/HttpCallDetailsViewer \
+curl -s -X POST http://localhost:7071/api/HttpCallDetailsViewer \
      -H "Authorization: Bearer <your-jwt>" \
      -o response.html && open response.html
 ```
@@ -117,9 +111,9 @@ Bearer Token
 | File | Purpose |
 |---|---|
 | `host.json` | Azure Functions host settings (logging, Application Insights sampling) |
-| `Properties/launchSettings.json` | Local run profile — sets port `7178` |
+| `Properties/launchSettings.json` | Local run profile |
 
 ### Deployment
 
-See the [root README](../Readme.md#deploy-to-azure) for full deployment instructions.
+See the [root README](../Readme.md) for full deployment instructions.
 
