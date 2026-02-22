@@ -5,10 +5,8 @@ using Microsoft.Agents.AI;
 using OpenAI.Chat;
 using System.ComponentModel;
 using Microsoft.Extensions.AI;
-using Microsoft.Identity.Client;
-using Microsoft.Identity.Client.Extensions.Msal;
 
-// Acquire token using existing Azure CLI session
+// Acquire token using existing Azure CLI session - This simulates token obtainment -> Should be more sophisticated in production (OAuth2 Flow)
 var credential = new AzureCliCredential();
 var scopes = new[] { Environment.GetEnvironmentVariable("API_SCOPE") ?? "https://management.azure.com/.default" };
 
@@ -21,7 +19,7 @@ Console.WriteLine($"Token acquired for: {tokenResult.Account?.Username}");
 Console.WriteLine($"Expires: {tokenResult.ExpiresOn}");
 
 
-//Define Debug Tool
+//Define a Tool. Will use the users token from above
 [Description("Does the thing. The user will know.")]
 async Task<string> DoTheThing()
 {
@@ -32,12 +30,15 @@ async Task<string> DoTheThing()
     return await response.Content.ReadAsStringAsync();
 }
 
+//Define the Foundry Config
 var endpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")
     ?? throw new InvalidOperationException("Set AZURE_OPENAI_ENDPOINT");
 var deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o-mini";
 
+//Define the Agent
 AIAgent agent = new AzureOpenAIClient(new Uri(endpoint), new AzureCliCredential())
     .GetChatClient(deploymentName)
     .AsAIAgent(instructions: "You are a friendly assistant.",tools:[AIFunctionFactory.Create(DoTheThing)], name: "HelloAgent");
 
+//Execute the Agent and see the result. Token Details will be in Debug Log of Functions.
 Console.WriteLine(await agent.RunAsync("Would you please do the thing?"));
