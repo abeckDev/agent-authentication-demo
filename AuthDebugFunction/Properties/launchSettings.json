@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "agent_authentication_demo": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7178",
+      "launchBrowser": false
+    }
+  }
+}
