@@ -6,7 +6,7 @@
     <OutputType>Exe</OutputType>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>agent_authentication_demo</RootNamespace>
+    <RootNamespace>AbeckDev.AuthAgentSample.DebugFunction</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

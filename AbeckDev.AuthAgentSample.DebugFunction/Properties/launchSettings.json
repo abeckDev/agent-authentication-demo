@@ -1,8 +1,7 @@
 {
   "profiles": {
-    "agent_authentication_demo": {
+    "AbeckDev.AuthAgentSample.DebugFunction": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7178",
       "launchBrowser": false
     }
   }
