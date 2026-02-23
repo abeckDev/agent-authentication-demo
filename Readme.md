@@ -9,6 +9,28 @@ The solution contains two projects that work together:
 | [`AbeckDev.AuthAgentSample.Agent`](./AbeckDev.AuthAgentSample.Agent/Readme.md) | A simple AI agent that acquires the current user's token (via Azure CLI) and calls the debug function as that user |
 | [`AbeckDev.AuthAgentSample.DebugFunction`](./AbeckDev.AuthAgentSample.DebugFunction/Readme.md) | An Azure Function that logs the full HTTP request details — including the decoded JWT bearer token — and returns them as an HTML page |
 
+```mermaid
+graph LR
+    User(["👤 User"])
+
+    subgraph Solution["agent-authentication-demo Solution"]
+        Agent["AbeckDev.AuthAgentSample.Agent\n(AI Agent — .NET 9)"]
+        Func["AbeckDev.AuthAgentSample.DebugFunction\n(Azure Function — .NET 8)"]
+    end
+
+    subgraph Azure["Azure Services"]
+        AAD["Azure AD / Entra ID"]
+        AOAI["Azure OpenAI"]
+    end
+
+    User -- "az login / AzureCliCredential" --> AAD
+    AAD -- "Bearer token" --> Agent
+    Agent -- "Chat completion + tool call" --> AOAI
+    Agent -- "POST with Bearer token" --> Func
+    Func -- "HTML response\n(headers + decoded JWT)" --> Agent
+    Agent -- "Result" --> User
+```
+
 ---
 
 ## How It Works
