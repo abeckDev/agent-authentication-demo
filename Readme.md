@@ -13,21 +13,32 @@ The solution contains two projects that work together:
 
 ## How It Works
 
-```
-User (Azure CLI session)
-        │
-        ▼ token acquisition
-AbeckDev.AuthAgentSample.Agent
-        │  asks AI: "Would you please do the thing?"
-        │
-        ▼ AI invokes tool
-  DoTheThing()  ──── Bearer <user-token> ────►  AbeckDev.AuthAgentSample.DebugFunction
-                                                         │
-                                                         ▼
-                                          Logs & returns HTML with:
-                                          - All request headers
-                                          - Raw JWT bearer token
-                                          - Decoded JWT claims (JSON)
+```mermaid
+sequenceDiagram
+    actor User
+    participant CLI as Azure CLI
+    participant Agent as Agent<br/>(AuthAgentSample.Agent)
+    participant AAD as Azure AD / Entra ID
+    participant AOAI as Azure OpenAI
+    participant Func as Debug Function<br/>(AuthAgentSample.DebugFunction)
+
+    User->>CLI: az login
+    CLI-->>AAD: Interactive login
+    AAD-->>CLI: User session established
+
+    User->>Agent: dotnet run
+
+    Agent->>AAD: GetTokenAsync(AzureCliCredential, API_SCOPE)
+    AAD-->>Agent: Bearer <user-token>
+
+    Agent->>AOAI: ChatCompletion("Would you please do the thing?")<br/>+ DoTheThing tool definition
+    AOAI-->>Agent: tool_call: DoTheThing()
+
+    Agent->>Func: POST /api/HttpCallDetailsViewer<br/>Authorization: Bearer <user-token>
+    Func->>Func: Extract & decode JWT claims
+    Func-->>Agent: HTML (headers + raw token + decoded claims)
+
+    Agent-->>User: Display result
 ```
 
 1. The **Agent** uses `AzureCliCredential` to obtain the currently signed-in user's access token.  
