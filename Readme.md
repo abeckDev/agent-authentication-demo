@@ -9,25 +9,58 @@ The solution contains two projects that work together:
 | [`AbeckDev.AuthAgentSample.Agent`](./AbeckDev.AuthAgentSample.Agent/Readme.md) | A simple AI agent that acquires the current user's token (via Azure CLI) and calls the debug function as that user |
 | [`AbeckDev.AuthAgentSample.DebugFunction`](./AbeckDev.AuthAgentSample.DebugFunction/Readme.md) | An Azure Function that logs the full HTTP request details — including the decoded JWT bearer token — and returns them as an HTML page |
 
+```mermaid
+graph LR
+    User(["👤 User"])
+
+    subgraph Solution["agent-authentication-demo Solution"]
+        Agent["AbeckDev.AuthAgentSample.Agent\n(AI Agent — .NET 9)"]
+        Func["AbeckDev.AuthAgentSample.DebugFunction\n(Azure Function — .NET 8)"]
+    end
+
+    subgraph Azure["Azure Services"]
+        AAD["Azure AD / Entra ID"]
+        AOAI["Azure OpenAI"]
+    end
+
+    User -- "az login / AzureCliCredential" --> AAD
+    AAD -- "Bearer token" --> Agent
+    Agent -- "Chat completion + tool call" --> AOAI
+    Agent -- "POST with Bearer token" --> Func
+    Func -- "HTML response\n(headers + decoded JWT)" --> Agent
+    Agent -- "Result" --> User
+```
+
 ---
 
 ## How It Works
 
-```
-User (Azure CLI session)
-        │
-        ▼ token acquisition
-AbeckDev.AuthAgentSample.Agent
-        │  asks AI: "Would you please do the thing?"
-        │
-        ▼ AI invokes tool
-  DoTheThing()  ──── Bearer <user-token> ────►  AbeckDev.AuthAgentSample.DebugFunction
-                                                         │
-                                                         ▼
-                                          Logs & returns HTML with:
-                                          - All request headers
-                                          - Raw JWT bearer token
-                                          - Decoded JWT claims (JSON)
+```mermaid
+sequenceDiagram
+    actor User
+    participant CLI as Azure CLI
+    participant Agent as Agent<br/>(AuthAgentSample.Agent)
+    participant AAD as Azure AD / Entra ID
+    participant AOAI as Azure OpenAI
+    participant Func as Debug Function<br/>(AuthAgentSample.DebugFunction)
+
+    User->>CLI: az login
+    CLI-->>AAD: Interactive login
+    AAD-->>CLI: User session established
+
+    User->>Agent: dotnet run
+
+    Agent->>AAD: GetTokenAsync(AzureCliCredential, API_SCOPE)
+    AAD-->>Agent: Bearer <user-token>
+
+    Agent->>AOAI: ChatCompletion("Would you please do the thing?")<br/>+ DoTheThing tool definition
+    AOAI-->>Agent: tool_call: DoTheThing()
+
+    Agent->>Func: POST /api/HttpCallDetailsViewer<br/>Authorization: Bearer <user-token>
+    Func->>Func: Extract & decode JWT claims
+    Func-->>Agent: HTML (headers + raw token + decoded claims)
+
+    Agent-->>User: Display result
 ```
 
 1. The **Agent** uses `AzureCliCredential` to obtain the currently signed-in user's access token.  
