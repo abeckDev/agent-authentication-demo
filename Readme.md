@@ -1,5 +1,9 @@
 # Agent Authentication Demo
 
+> [!WARNING]
+> **This repository is archived and no longer maintained.**
+> The underlying self-service APIs this demo depends on are being retired. This repository is kept for reference purposes only. No further updates, bug fixes, or support will be provided.
+
 A demonstration solution showing how **credential delegation** works when an AI agent calls a backend API on behalf of a signed-in user.
 
 The solution contains two projects that work together:
@@ -158,5 +162,5 @@ The agent will acquire a token, ask the AI model to "do the thing", and the mode
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request.
+This repository is **archived** and no longer accepting contributions. It is preserved for historical and reference purposes only.
 
